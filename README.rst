@@ -59,3 +59,14 @@ like this in your project's urls.py: ::
   from django_xmlrpc.views import handle_xmlrpc
 
   url(r'^xmlrpc/$', handle_xmlrpc, name='xmlrpc'),
+
+Localization
+============
+
+To generate localization for your language call: ::
+
+  python ./env/bin/django-admin makemessages -l uk --settings=settings
+
+If the command fails to find settings file add path to your project: ::
+
+   export PYTHONPATH=/home/dismine/www/django-xmlrp
