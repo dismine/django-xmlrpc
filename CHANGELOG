@@ -3,3 +3,4 @@
 
 * Refactoring by Sourcery.
 * Drop support for Django<3.2.
+* Drop support Python < 3.6.

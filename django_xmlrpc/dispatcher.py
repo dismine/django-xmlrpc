@@ -37,12 +37,10 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
-from inspect import getargspec
 
-try:
-    from xmlrpc.server import SimpleXMLRPCDispatcher
-except ImportError:  # Python 2
-    from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
+from xmlrpc.server import SimpleXMLRPCDispatcher
+
+from django.utils.inspect import get_func_args
 
 
 class DjangoXMLRPCDispatcher(SimpleXMLRPCDispatcher):
@@ -67,7 +65,7 @@ class DjangoXMLRPCDispatcher(SimpleXMLRPCDispatcher):
         try:
             sig = func._xmlrpc_signature
         except Exception:
-            sig = {'returns': 'string', 'args': ['string' for _ in getargspec(func)[0]]}
+            sig = {'returns': 'string', 'args': ['string' for _ in get_func_args(func)[0]]}
 
         return [sig['returns']] + sig['args']
 

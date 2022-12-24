@@ -38,13 +38,11 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
-try:
-    from xmlrpc.client import Fault
-except ImportError:  # Python 2
-    from xmlrpclib import Fault
+
+from xmlrpc.client import Fault
+
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext as _
-
 
 # Some constants for your pleasure
 # XXX: Any standardization?
