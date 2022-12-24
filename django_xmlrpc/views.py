@@ -68,7 +68,7 @@ def handle_xmlrpc(request):
                 xmlrpc_dispatcher._marshaled_dispatch(request.body))
             logger.debug(response)
             return response
-        except:
+        except Exception:
             return HttpResponseServerError()
     else:
         methods = xmlrpc_dispatcher.system_listMethods()

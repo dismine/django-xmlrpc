@@ -66,11 +66,8 @@ class DjangoXMLRPCDispatcher(SimpleXMLRPCDispatcher):
 
         try:
             sig = func._xmlrpc_signature
-        except:
-            sig = {
-                'returns': 'string',
-                'args': ['string' for arg in getargspec(func)[0]],
-            }
+        except Exception:
+            sig = {'returns': 'string', 'args': ['string' for _ in getargspec(func)[0]]}
 
         return [sig['returns']] + sig['args']
 
