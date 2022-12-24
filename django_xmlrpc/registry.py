@@ -37,7 +37,10 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
-from collections import Callable
+try:
+    from collections import Callable
+except ImportError:
+    from collections.abc import Callable
 from logging import getLogger
 
 from django.apps import apps
@@ -66,36 +69,37 @@ def register_xmlrpc_method(path, name):
     """
     # If 'path' is actually a function, just add it without fuss
     if isinstance(path, Callable):
-        logger.info("Registering '%s:%s' => '%s'" % (
-            path.__module__, path.__name__, name))
+        logger.info(f"Registering '{path.__module__}:{path.__name__}' => '{name}'")
         xmlrpc_dispatcher.register_function(path, name)
         return
 
     # Otherwise we try and find something that we can call
-    logger.debug('%s not callable, resolving path...' % path)
+    logger.debug(f'{path} not callable, resolving path...')
     i = path.rfind('.')
     module, attr = path[:i], path[i + 1:]
 
     try:
         mod = __import__(module, globals(), locals(), [attr])
-    except ImportError:
+    except ImportError as e:
         raise ImproperlyConfigured(
             "Error registering XML-RPC method: "
-            "module %s can't be imported" % module)
+            "module %s can't be imported" % module
+        ) from e
 
     try:
         func = getattr(mod, attr)
-    except AttributeError:
+    except AttributeError as exc:
         raise ImproperlyConfigured(
             'Error registering XML-RPC method: '
-            'module %s doesn\'t define a method "%s"' % (module, attr))
+            'module %s doesn\'t define a method "%s"' % (module, attr)
+        ) from exc
 
     if not isinstance(func, Callable):
         raise ImproperlyConfigured(
             'Error registering XML-RPC method: '
             '"%s" is not callable in module %s' % (attr, module))
 
-    logger.info("Registering '%s:%s' => '%s'" % (module, attr, name))
+    logger.info(f"Registering '{module}:{attr}' => '{name}'")
     xmlrpc_dispatcher.register_function(func, name)
 
 
@@ -117,16 +121,15 @@ def register_xmlrpc_methods_autodiscover():
     logger.info('Register XML-RPC methods by inspecting INSTALLED_APPS')
     for application in apps.get_app_configs():
         application_name = application.name
-        logger.debug('Checking %s...' % application_name)
+        logger.debug(f'Checking {application_name}...')
         try:
-            module = __import__('%s.xmlrpc' % application_name,
-                                globals(), locals(), [''])
-            logger.debug('Found %s.xmlrpc' % application_name)
+            module = __import__(f'{application_name}.xmlrpc', globals(), locals(), [''])
+            logger.debug(f'Found {application_name}.xmlrpc')
         except ImportError:
-            logger.debug('Not found %s.xmlrpc' % application_name)
+            logger.debug(f'Not found {application_name}.xmlrpc')
             continue
         if hasattr(module, 'XMLRPC_METHODS'):
-            logger.info('Found XMLRPC_METHODS in %s.xmlrpc' % application_name)
+            logger.info(f'Found XMLRPC_METHODS in {application_name}.xmlrpc')
             for path, name in module.XMLRPC_METHODS:
                 register_xmlrpc_method(path, name)
 

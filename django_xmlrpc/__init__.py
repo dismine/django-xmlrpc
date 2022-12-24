@@ -38,7 +38,14 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
-VERSION = (0, 1, 8)
-__version__ = '.'.join(map(str, VERSION))
+__version__ = '0.1.8+dismine.1'
 
-default_app_config = 'django_xmlrpc.apps.XMLRPCConfig'
+__license__ = 'New BSD License'
+
+__author__ = 'Graham Binns'
+__author_email__ = 'graham.binns@gmail.com'
+
+__maintainer__ = 'dismine'
+__maintainer_email__ = 'dismine@gmail.com'
+
+__url__ = 'https://github.com/dismine/django-blog-zinnia'

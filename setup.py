@@ -10,14 +10,17 @@ setup(name='django-xmlrpc',
       version=django_xmlrpc.__version__,
 
       description='XML-RPC Server App for the Django framework.',
-      long_description=open(os.path.join('README.rst')).read(),
+      long_description='\n'.join([open('README.rst').read(),
+                                  open('CHANGELOG').read()]),
+      long_description_content_type='text/x-rst',
       keywords='django, service, xmlrpc',
 
-      author='Graham Binns',
-      author_email='graham.binns@gmail.com',
-      maintainer='Fantomas42',
-      maintainer_email='fantomas42@gmail.com',
-      url='https://github.com/Fantomas42/django-xmlrpc',
+      author=django_xmlrpc.__author__,
+      author_email=django_xmlrpc.__author_email__,
+      maintainer=django_xmlrpc.__maintainer__,
+      maintainer_email=django_xmlrpc.__maintainer_email__,
+      url=django_xmlrpc.__url__,
+      license=django_xmlrpc.__license__,
 
       packages=find_packages(),
       classifiers=[
@@ -30,7 +33,7 @@ setup(name='django-xmlrpc',
           'Operating System :: OS Independent',
           'Topic :: Software Development :: Libraries :: Python Modules'],
 
-      license='New BSD License',
       include_package_data=True,
-      zip_safe=False
+      zip_safe=False,
+      install_requires=['Django>=3.2']
       )

@@ -6,7 +6,7 @@ Django XML-RPC
 views (or indeed any other function) using XML-RPC.
 
 This is a fork of the original version made by Svetlyak40wt compatible with
-Django >= 1.8 and Python >= 2.5.
+Django >= 3.2 and Python >= 3.6.
 
 If you want to use **django_xmlrpc** for an older version of Django or Python,
 please use an old release.
@@ -59,3 +59,14 @@ like this in your project's urls.py: ::
   from django_xmlrpc.views import handle_xmlrpc
 
   url(r'^xmlrpc/$', handle_xmlrpc, name='xmlrpc'),
+
+Localization
+============
+
+To generate localization for your language call: ::
+
+  python ./env/bin/django-admin makemessages -l uk --settings=settings
+
+If the command fails to find settings file add path to your project: ::
+
+   export PYTHONPATH=/home/dismine/www/django-xmlrp

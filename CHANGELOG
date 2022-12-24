@@ -1,0 +1,8 @@
+0.1.8+dismine.1 - 2022/12/24
+-------------------
+
+* Refactoring by Sourcery.
+* Drop support for Django<3.2.
+* Drop support Python < 3.6.
+* Added Ukrainian language.
+* Added support for django request.

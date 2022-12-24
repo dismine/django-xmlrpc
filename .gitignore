@@ -14,3 +14,5 @@ src_eggs
 develop-eggs
 .installed.cfg
 django_xmlrpc.egg-info/
+.idea
+env/
