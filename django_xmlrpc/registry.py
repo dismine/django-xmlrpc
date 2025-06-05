@@ -37,6 +37,7 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
+
 try:
     from collections import Callable
 except ImportError:
@@ -49,14 +50,14 @@ from django.core.exceptions import ImproperlyConfigured
 
 from django_xmlrpc.dispatcher import xmlrpc_dispatcher
 
-logger = getLogger('xmlrpc.registry')
+logger = getLogger("xmlrpc.registry")
 
 
 def register_xmlrpc_methods():
     """
     Register all xmlrpc methods in the server.
     """
-    if hasattr(settings, 'XMLRPC_METHODS'):
+    if hasattr(settings, "XMLRPC_METHODS"):
         register_xmlrpc_methods_legacy()
     else:
         register_xmlrpc_methods_autodiscover()
@@ -74,30 +75,30 @@ def register_xmlrpc_method(path, name):
         return
 
     # Otherwise we try and find something that we can call
-    logger.debug(f'{path} not callable, resolving path...')
-    i = path.rfind('.')
-    module, attr = path[:i], path[i + 1:]
+    logger.debug(f"{path} not callable, resolving path...")
+    i = path.rfind(".")
+    module, attr = path[:i], path[i + 1 :]
 
     try:
         mod = __import__(module, globals(), locals(), [attr])
     except ImportError as e:
         raise ImproperlyConfigured(
-            "Error registering XML-RPC method: "
-            "module %s can't be imported" % module
+            "Error registering XML-RPC method: " "module %s can't be imported" % module
         ) from e
 
     try:
         func = getattr(mod, attr)
     except AttributeError as exc:
         raise ImproperlyConfigured(
-            'Error registering XML-RPC method: '
+            "Error registering XML-RPC method: "
             'module %s doesn\'t define a method "%s"' % (module, attr)
         ) from exc
 
     if not isinstance(func, Callable):
         raise ImproperlyConfigured(
-            'Error registering XML-RPC method: '
-            '"%s" is not callable in module %s' % (attr, module))
+            "Error registering XML-RPC method: "
+            '"%s" is not callable in module %s' % (attr, module)
+        )
 
     logger.info(f"Registering '{module}:{attr}' => '{name}'")
     xmlrpc_dispatcher.register_function(func, name)
@@ -108,7 +109,7 @@ def register_xmlrpc_methods_legacy():
     Load up any methods that have been registered
     with the server via settings.
     """
-    logger.info('Register XML-RPC methods from settings.XMLRPC_METHODS')
+    logger.info("Register XML-RPC methods from settings.XMLRPC_METHODS")
     for path, name in settings.XMLRPC_METHODS:
         register_xmlrpc_method(path, name)
 
@@ -118,18 +119,18 @@ def register_xmlrpc_methods_autodiscover():
     Looks in app directories for a module called 'xmlrpc'
     This should contain a distribution XMLRPC_METHODS declaration.
     """
-    logger.info('Register XML-RPC methods by inspecting INSTALLED_APPS')
+    logger.info("Register XML-RPC methods by inspecting INSTALLED_APPS")
     for application in apps.get_app_configs():
         application_name = application.name
-        logger.debug(f'Checking {application_name}...')
+        logger.debug(f"Checking {application_name}...")
         try:
-            module = __import__(f'{application_name}.xmlrpc', globals(), locals(), [''])
-            logger.debug(f'Found {application_name}.xmlrpc')
+            module = __import__(f"{application_name}.xmlrpc", globals(), locals(), [""])
+            logger.debug(f"Found {application_name}.xmlrpc")
         except ImportError:
-            logger.debug(f'Not found {application_name}.xmlrpc')
+            logger.debug(f"Not found {application_name}.xmlrpc")
             continue
-        if hasattr(module, 'XMLRPC_METHODS'):
-            logger.info(f'Found XMLRPC_METHODS in {application_name}.xmlrpc')
+        if hasattr(module, "XMLRPC_METHODS"):
+            logger.info(f"Found XMLRPC_METHODS in {application_name}.xmlrpc")
             for path, name in module.XMLRPC_METHODS:
                 register_xmlrpc_method(path, name)
 

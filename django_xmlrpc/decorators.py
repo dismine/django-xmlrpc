@@ -56,20 +56,23 @@ class AuthenticationFailedException(Fault):
 
     Author
     """
+
     def __init__(self):
-        Fault.__init__(self, AUTHENTICATION_FAILED_CODE,
-                       _('Username and/or password is incorrect'))
+        Fault.__init__(
+            self, AUTHENTICATION_FAILED_CODE, _("Username and/or password is incorrect")
+        )
 
 
 class PermissionDeniedException(Fault):
     """An XML-RPC fault to be raised when a permission_required permission
     check fails
     """
+
     def __init__(self):
-        Fault.__init__(self, PERMISSION_DENIED_CODE, _('Permission denied'))
+        Fault.__init__(self, PERMISSION_DENIED_CODE, _("Permission denied"))
 
 
-def xmlrpc_method(returns='string', args=None, name=None):
+def xmlrpc_method(returns="string", args=None, name=None):
     """Adds a signature to an XML-RPC function.
 
     returns
@@ -93,13 +96,11 @@ def xmlrpc_method(returns='string', args=None, name=None):
             The function to add the signature to
         """
         # Add a signature to the function
-        func._xmlrpc_signature = {
-            'returns': returns,
-            'args': args
-        }
+        func._xmlrpc_signature = {"returns": returns, "args": args}
         return func
 
     return _xmlrpc_func
+
 
 xmlrpc_func = xmlrpc_method
 
@@ -116,6 +117,7 @@ def permission_required(perm=None):
         The permission (as a string) that the user must hold to be able to
         call the function that is decorated with permission_required.
     """
+
     def _dec(func):
         """An inner decorator. Adds the lookup code for the permission passed
         in the outer method to the function passed to it.
@@ -123,6 +125,7 @@ def permission_required(perm=None):
         func
             The function to add the permission check to
         """
+
         def __authenticated_call(username, password, *args):
             """Inner inner decorator. Adds username and password parameters to
             a given XML-RPC function for authentication and permission
@@ -144,26 +147,28 @@ def permission_required(perm=None):
                 raise
             except PermissionDeniedException:
                 raise
-            except:
+            except:  # noqa: E722
                 raise AuthenticationFailedException
             return func(user, *args)
 
         # Update the function's XML-RPC signature, if the method has one
-        if hasattr(func, '_xmlrpc_signature'):
+        if hasattr(func, "_xmlrpc_signature"):
             sig = func._xmlrpc_signature
 
             # We just stick two string args on the front of sign['args'] to
             # represent username and password
-            sig['args'] = (['string'] * 2) + sig['args']
+            sig["args"] = (["string"] * 2) + sig["args"]
             __authenticated_call._xmlrpc_signature = sig
 
         # Update the function's docstring
         if func.__doc__:
-            __authenticated_call.__doc__ = func.__doc__ + \
-                "\nNote: Authentication is required."""
+            __authenticated_call.__doc__ = (
+                func.__doc__ + "\nNote: Authentication is required." ""
+            )
             if perm:
-                __authenticated_call.__doc__ += (' this function requires '
-                                                 '"%s" permission.' % perm)
+                __authenticated_call.__doc__ += (
+                    " this function requires " '"%s" permission.' % perm
+                )
 
         return __authenticated_call
 

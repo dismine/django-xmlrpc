@@ -37,14 +37,16 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
+
 from django.apps import AppConfig
 
 
 class XMLRPCConfig(AppConfig):
-    name = 'django_xmlrpc'
-    label = 'xmlrpc'
-    verbose_name = 'XMRPC'
+    name = "django_xmlrpc"
+    label = "xmlrpc"
+    verbose_name = "XMRPC"
 
     def ready(self):
         from django_xmlrpc.registry import register_xmlrpc_methods
+
         register_xmlrpc_methods()

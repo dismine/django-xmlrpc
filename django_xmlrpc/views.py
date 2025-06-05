@@ -39,6 +39,7 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
+
 from logging import getLogger
 
 from django.http import HttpResponse
@@ -49,7 +50,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django_xmlrpc.dispatcher import xmlrpc_dispatcher
 
 
-logger = getLogger('xmlrpc.views')
+logger = getLogger("xmlrpc.views")
 
 
 @csrf_exempt
@@ -60,12 +61,13 @@ def handle_xmlrpc(request):
         The HttpRequest object that carries the XML-RPC call. If this is a
         GET request, nothing will happen (we only accept POST requests)
     """
-    if request.method == 'POST':
+    if request.method == "POST":
         logger.info(request.body)
         try:
-            response = HttpResponse(content_type='text/xml')
+            response = HttpResponse(content_type="text/xml")
             response.write(
-                xmlrpc_dispatcher._marshaled_dispatch(request.body, request=request))
+                xmlrpc_dispatcher._marshaled_dispatch(request.body, request=request)
+            )
             logger.debug(response)
             return response
         except Exception:
@@ -77,8 +79,8 @@ def handle_xmlrpc(request):
         for method in methods:
             sig_ = xmlrpc_dispatcher.system_methodSignature(method)
             sig = {
-                'returns': sig_[0],
-                'args': ', '.join(sig_[1:]),
+                "returns": sig_[0],
+                "args": ", ".join(sig_[1:]),
             }
 
             # This just reads your docblock, so fill it in!
@@ -86,4 +88,4 @@ def handle_xmlrpc(request):
 
             method_list.append((method, sig, method_help))
 
-        return render(request, 'xmlrpc_get.html', {'methods': method_list})
+        return render(request, "xmlrpc_get.html", {"methods": method_list})

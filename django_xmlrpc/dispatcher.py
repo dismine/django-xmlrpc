@@ -67,9 +67,12 @@ class DjangoXMLRPCDispatcher(SimpleXMLRPCDispatcher):
         try:
             sig = func._xmlrpc_signature
         except Exception:
-            sig = {'returns': 'string', 'args': ['string' for _ in get_func_args(func)[0]]}
+            sig = {
+                "returns": "string",
+                "args": ["string" for _ in get_func_args(func)[0]],
+            }
 
-        return [sig['returns']] + sig['args']
+        return [sig["returns"]] + sig["args"]
 
     def _marshaled_dispatch(self, data, dispatch_method=None, path=None, request=None):
         """Dispatches an XML-RPC method from marshalled (XML) data.
@@ -95,11 +98,14 @@ class DjangoXMLRPCDispatcher(SimpleXMLRPCDispatcher):
                 response = self._dispatch(method, params, request)
             # wrap response in a singleton tuple
             response = (response,)
-            response = dumps(response, methodresponse=1,
-                             allow_none=self.allow_none, encoding=self.encoding)
+            response = dumps(
+                response,
+                methodresponse=1,
+                allow_none=self.allow_none,
+                encoding=self.encoding,
+            )
         except Fault as fault:
-            response = dumps(fault, allow_none=self.allow_none,
-                             encoding=self.encoding)
+            response = dumps(fault, allow_none=self.allow_none, encoding=self.encoding)
         except Exception:
             # report exception back to server
             exc_type, exc_value, exc_tb = sys.exc_info()
@@ -111,9 +117,9 @@ class DjangoXMLRPCDispatcher(SimpleXMLRPCDispatcher):
                 )
             finally:
                 # Break reference cycle
-                exc_type = exc_value = exc_tb = None
+                exc_type = exc_value = exc_tb = None  # noqa: F841
 
-        return response.encode(self.encoding, 'xmlcharrefreplace')
+        return response.encode(self.encoding, "xmlcharrefreplace")
 
     def _dispatch(self, method, params, request=None):
         """Dispatches the XML-RPC method.
@@ -154,16 +160,14 @@ class DjangoXMLRPCDispatcher(SimpleXMLRPCDispatcher):
             raise Exception(f'method "{method}" is not supported')
 
         if self.instance is not None:
-            if hasattr(self.instance, '_dispatch'):
+            if hasattr(self.instance, "_dispatch"):
                 # call the `_dispatch` method on the instance
                 return self.instance._dispatch(method, params)
 
             # call the instance's method directly
             try:
                 func = resolve_dotted_attribute(
-                    self.instance,
-                    method,
-                    self.allow_dotted_names
+                    self.instance, method, self.allow_dotted_names
                 )
             except AttributeError:
                 pass
@@ -173,8 +177,9 @@ class DjangoXMLRPCDispatcher(SimpleXMLRPCDispatcher):
                         return func(request, *params)
                     except TypeError:
                         # try without request
-                        return func(*params)
+                        return func(*params)  # noqa: E305
 
         raise Exception(f'method "{method}" is not supported')
+
 
 xmlrpc_dispatcher = DjangoXMLRPCDispatcher(allow_none=False, encoding=None)
