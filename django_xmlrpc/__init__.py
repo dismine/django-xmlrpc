@@ -39,7 +39,7 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-__version__ = "0.1.8+dismine.1"
+__version__ = "0.2.0+dismine.1"
 
 __license__ = "New BSD License"
 

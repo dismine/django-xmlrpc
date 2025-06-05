@@ -1,6 +1,6 @@
 [project]
 name = "django-xmlrpc"
-version = "0.1.8+dismine.1"
+version = "0.2.0+dismine.1"
 description = "XML-RPC Server App for the Django framework."
 authors = [
     {name = "Graham Binns",email = "graham.binns@gmail.com"}
