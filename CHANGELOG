@@ -1,3 +1,10 @@
+0.2.0+dismine.1 - 2024/06/05
+-------------------
+
+* Drop support for Django < 5.0.
+* Drop support Python < 3.10.
+* Migration to Poetry.
+
 0.1.8+dismine.1 - 2022/12/24
 -------------------
 

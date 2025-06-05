@@ -1,0 +1,47 @@
+[project]
+name = "django-xmlrpc"
+version = "0.1.8+dismine.1"
+description = "XML-RPC Server App for the Django framework."
+authors = [
+    {name = "Graham Binns",email = "graham.binns@gmail.com"}
+]
+maintainers = [
+    {name = "Roman Telezhynskyi",email = "dismine@gmail.com"}
+]
+license = {file = "LICENSE"}
+keywords = ["django", "service", "xmlrpc"]
+readme = "README.rst"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "django (>=5.0)",
+    "black (>=25.1.0,<26.0.0)",
+]
+classifiers=[
+    'Framework :: Django',
+    'Development Status :: 5 - Production/Stable',
+    'Environment :: Web Environment',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Intended Audience :: Developers',
+    'Operating System :: OS Independent',
+    'Topic :: Software Development :: Libraries :: Python Modules'
+]
+
+[project.urls]
+Repository = "https://github.com/dismine/django-xmlrpc"
+Changelog = "https://github.com/dismine/django-xmlrpc/blob/master/CHANGELOG"
+
+[tool.poetry]
+include = ["CHANGELOG", "LICENSE", "README.rst"]
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+django-upgrade = "^1.25.0"
+flake8 = "^7.2.0"
+black = "^25.1.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
